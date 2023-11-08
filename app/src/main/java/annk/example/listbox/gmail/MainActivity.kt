@@ -1,37 +1,19 @@
 package annk.example.listbox.gmail
 
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.TextView
-import java.text.SimpleDateFormat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.util.Date
 
+
 open class MainActivity : AppCompatActivity() {
-    open fun fit(v : TextView, txt : String) {
-        val paint = v.paint;
-        var numChars = 1
-        while(numChars < txt.length) {
-            if(paint.measureText(txt, 0, numChars) < 550)
-                ++numChars;
-            else break;
-        }
-        if(numChars < txt.length) v.text = txt.substring(0, numChars) + " ..."
-        else v.text = txt
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
+   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val list = findViewById<ListView>(R.id.list)
+        val list = findViewById<RecyclerView>(R.id.list)
         val arr = arrayOf(
             Mail("mail1", "hello this is first", "ankis", Date(), false, true),
             Mail("mail2", "hello this is first, second, longgggggggggggggggggggggggggg", "annkis", Date(), false, false),
@@ -43,6 +25,28 @@ open class MainActivity : AppCompatActivity() {
             Mail("mail8", "hello this is first", "cannkis", Date(), false, false),
             Mail("mail9", "hello this is first", "is", Date(), false, false)
         );
+       val mLayoutManager = LinearLayoutManager(applicationContext)
+        list.setLayoutManager(mLayoutManager)
+
+        list.adapter = object : RecyclerView.Adapter<MailView>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MailView {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.mail, parent, false)
+                return MailView(view)
+
+            }
+
+            override fun getItemCount(): Int {
+                return arr.size
+            }
+
+            override fun onBindViewHolder(holder: MailView, position: Int) {
+                holder.switchTo(arr[position])
+            }
+
+        }
+
+        /*
         list.adapter = object : BaseAdapter() {
             override fun getCount(): Int {
                 return arr.size;
@@ -94,5 +98,6 @@ open class MainActivity : AppCompatActivity() {
                 return l
             }
         }
+        */
     }
 }
